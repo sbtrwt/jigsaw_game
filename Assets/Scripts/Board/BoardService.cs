@@ -24,6 +24,7 @@ namespace JigsawGame.Board
             tileHeight = boardSO.HeightInPixel / boardSO.RowCount;
             tileWidth = boardSO.WidthInPixel / boardSO.ColumnCount;
             selectedImageIndex = 0;
+            minScale = (boardSO.RowCount < boardSO.ColumnCount) ? boardSO.RowCount : boardSO.ColumnCount;
         }
 
         public void Init(EventService eventService)
@@ -46,7 +47,7 @@ namespace JigsawGame.Board
         {
             Texture2D boarderTexture = SpriteHandler.LoadTexture(boardSO.ImagesPath[selectedImageIndex]);
 
-            minScale = (boardSO.RowCount < boardSO.ColumnCount) ? boardSO.RowCount : boardSO.ColumnCount;
+           
             int totalTileCount = minScale * minScale;
             TileController tempTileController;
             Sprite tempSprite;
@@ -57,11 +58,12 @@ namespace JigsawGame.Board
             {
                 tempTileController = new TileController(boardSO.TilePrefab)
                 {
-                    ID = i + 1
+                    ID = i + 1,
+                    CurrentIndex = i
                 };
                 tempTileController.Init(this);
 
-                tempPosition = new Vector2((i % minScale) * tileWidth, (i / minScale) * tileHeight);
+                tempPosition = GetPositionByIndex(i);
                 tempTileController.SetPosition(tempPosition);
                 tempTileController.SetCorrectPosition(tempPosition);
                 tempTileController.SetSize(new Vector2(tileWidth, tileHeight));
@@ -75,6 +77,7 @@ namespace JigsawGame.Board
                 allTiles.Add(tempTileController);
             }
         }
+
 
         private void SetCameraPosition()
         {
@@ -90,6 +93,45 @@ namespace JigsawGame.Board
             float yOffset = minScale * tileHeight;
 
             return (posToValidate.x >= 0 && posToValidate.x <= xOffset) &&(posToValidate.y >= 0 && posToValidate.y <= yOffset);
+        }
+
+        public void SwapTilePosition(TileController tileController1, TileController tileController2) 
+        {
+            int tempIndex = tileController1.CurrentIndex;
+            tileController1.CurrentIndex = tileController2.CurrentIndex;
+            tileController2.CurrentIndex = tempIndex;
+            tileController1.SetPosition(GetPositionByIndex(tileController1.CurrentIndex));
+            tileController2.SetPosition(GetPositionByIndex(tileController2.CurrentIndex));
+        }
+        private Vector3 GetPositionByIndex(int index) 
+        {
+            return new Vector3((index % minScale) * tileWidth, (index / minScale) * tileHeight, 3); 
+        }
+
+        public TileController GetTileControllerByPosition(Vector2 positionToFind)
+        {
+            Vector2 tempPostion;
+            TileController resultTile=null;
+            foreach (var tile in allTiles)
+            {
+                tempPostion = GetPositionByIndex(tile.CurrentIndex);
+                //if((positionToFind - tempPostion).sqrMagnitude < tileWidth)
+                if ((positionToFind.x > (tempPostion.x - tileWidth / 1.3f)
+                    && positionToFind.x < (tempPostion.x + tileWidth / 1.3f))
+                    && (positionToFind.y >= (tempPostion.y - tileHeight / 1.3f)
+                    && positionToFind.y <= (tempPostion.y + tileHeight / 1.3f)))
+                {
+                    resultTile = tile;
+                    break;
+                }
+
+            }
+            return resultTile;
+        }
+
+        public void ResetTilePosition(TileController tileController)
+        {
+            tileController.SetPosition(GetPositionByIndex(tileController.CurrentIndex));
         }
     }
 

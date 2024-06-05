@@ -9,7 +9,7 @@ namespace JigsawGame.Tile
         private TileController controller;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private BoxCollider2D boxCollider2D;
-
+        [SerializeField] private LayerMask layerMask;
         private Camera mainCamera;
         private Vector3 positionOffset = new Vector3(0.0f, 0.0f, 0.0f);
         private Vector3 previousPosition;
@@ -39,7 +39,7 @@ namespace JigsawGame.Tile
             }
             if (Input.GetMouseButtonUp(0))
             {
-                transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+                transform.position = new Vector3(transform.position.x, transform.position.y, 1);
                 controller?.OnTileClickUp();
             }
 #endif
@@ -63,7 +63,8 @@ namespace JigsawGame.Tile
 #endif
             if (controller.IsSelected)
             {
-                Vector3 curPosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -1.0f)) + positionOffset;
+                Vector3 curPosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f)) + positionOffset;
+                curPosition.z = 1;
                 transform.position = curPosition;
             }
 
@@ -73,9 +74,10 @@ namespace JigsawGame.Tile
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
-
+           
             if (hit.collider != null && boxCollider2D.Equals(hit.collider))
             {
+               
                 return true;
             }
             return false;

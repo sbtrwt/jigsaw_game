@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 6078325418167710231}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -100,6 +100,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 4047609478478884856}
   boxCollider2D: {fileID: 3137149299635046453}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!61 &3137149299635046453
 BoxCollider2D:
   m_ObjectHideFlags: 0

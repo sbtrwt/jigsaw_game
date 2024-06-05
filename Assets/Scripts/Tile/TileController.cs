@@ -18,6 +18,7 @@ namespace JigsawGame.Tile
      
 
         public int ID { get; set; }
+        public int CurrentIndex { get; set; }
         public bool IsSelected{get;set;}
         public TileController(TileView tileViewPrefab)
         {
@@ -53,26 +54,42 @@ namespace JigsawGame.Tile
             if (tileView.ValidateClickAction())
             {
                 IsSelected = true;
-                Debug.Log(ID);
+               
             }
         }
 
         public void OnTileClickUp()
         {
+
             if (tileView.ValidateClickAction())
             {
                 IsSelected = false;
-                if(boardService.ValidateTilePosition(tileView.transform.position))
+                Debug.Log("Swap Valid position begin");
+                if (boardService.ValidateTilePosition(tileView.transform.position))
                 {
-                    Debug.Log("Valid position");
+                    Debug.Log("Swap Valid position ");
+
+                    TileController dropTile = boardService.GetTileControllerByPosition(tileView.transform.position);
+                    if (dropTile != null)
+                    {
+                        boardService.SwapTilePosition(this, dropTile);
+                        Debug.Log("Swap Valid position " + dropTile.CurrentIndex + " " + CurrentIndex);
+                    }
+                    else
+                    {
+                        tileView.SetPreviousPosition();
+                    }
                 }
                 else
                 {
-                    tileView.SetPreviousPosition();
+                    //tileView.SetPreviousPosition();
+                    boardService.ResetTilePosition(this);
                     Debug.Log("Invalid position");
                 }
-                Debug.Log(ID);
+                //Debug.Log(ID);
             }
+            else { boardService.ResetTilePosition(this); }
+            
         }
 
         
