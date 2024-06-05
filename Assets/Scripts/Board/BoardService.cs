@@ -44,22 +44,31 @@ namespace JigsawGame.Board
         private void ConfigureTiles()
         {
             Texture2D boarderTexture = SpriteHandler.LoadTexture(boardSO.ImagesPath[selectedImageIndex]);
-
-            int totalTileCount = boardSO.RowCount * boardSO.ColumnCount;
+            
+            int minScale = (boardSO.RowCount < boardSO.ColumnCount) ? boardSO.RowCount : boardSO.ColumnCount;
+            int totalTileCount = minScale * minScale;
             TileController tempTileController;
             Sprite tempSprite;
+            Vector2 tempPosition;
+            
+
             for (int i = 0; i < totalTileCount; i++)
             {
                 tempTileController = new TileController(boardSO.TilePrefab)
                 {
                     ID = i + 1
                 };
-                tempTileController.SetPosition(new Vector2((i % boardSO.ColumnCount) * tileWidth, (i / boardSO.RowCount) * tileHeight));
+               
+                tempPosition = new Vector2((i % minScale) * tileWidth, (i / minScale) * tileHeight);
+                tempTileController.SetPosition(tempPosition);
+                tempTileController.SetCorrectPosition(tempPosition);
+                tempTileController.SetSize(new Vector2(tileWidth, tileHeight));
                 tempSprite = SpriteHandler.CreateSpriteFromTexture2D(boarderTexture,
-                                                                    (i % boardSO.ColumnCount) * tileWidth,
-                                                                    (i / boardSO.RowCount) * tileHeight,
+                                                                    (int)tempPosition.x,
+                                                                     (int)tempPosition.y,
                                                                     tileWidth,
                                                                     tileHeight);
+
                 tempTileController.SetSprite(tempSprite);
                 allTiles.Add(tempTileController);
             }
