@@ -12,6 +12,7 @@ namespace JigsawGame.Tile
 
         private Camera mainCamera;
         private Vector3 positionOffset = new Vector3(0.0f, 0.0f, 0.0f);
+        private Vector3 previousPosition;
         private void Start()
         {
             mainCamera = Camera.main;
@@ -32,11 +33,13 @@ namespace JigsawGame.Tile
                 //controller?.SetPositionOffset(transform.position - mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0.0f)));
                 if (controller.IsSelected)
                 {
+                    previousPosition = transform.position;
                     positionOffset = transform.position - mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0.0f));
                 }
             }
             if (Input.GetMouseButtonUp(0))
             {
+                transform.position = new Vector3(transform.position.x, transform.position.y, 0);
                 controller?.OnTileClickUp();
             }
 #endif
@@ -60,7 +63,7 @@ namespace JigsawGame.Tile
 #endif
             if (controller.IsSelected)
             {
-                Vector3 curPosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0.0f)) + positionOffset;
+                Vector3 curPosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -1.0f)) + positionOffset;
                 transform.position = curPosition;
             }
 
@@ -85,6 +88,10 @@ namespace JigsawGame.Tile
         public void SetColliderOffset(Vector2 positionToSet)
         {
             boxCollider2D.offset = positionToSet;
+        }
+        public void SetPreviousPosition()
+        {
+            transform.position = previousPosition;
         }
     }
 }

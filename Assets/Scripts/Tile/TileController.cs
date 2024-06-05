@@ -15,7 +15,7 @@ namespace JigsawGame.Tile
         private Vector2 correctPosition;
         private Vector2 size;
 
-        private Vector3 positionOffset = new Vector3(0.0f, 0.0f, 0.0f);
+     
 
         public int ID { get; set; }
         public bool IsSelected{get;set;}
@@ -23,6 +23,10 @@ namespace JigsawGame.Tile
         {
             tileView = UnityEngine.Object.Instantiate(tileViewPrefab);
             tileView.SetController(this);
+        }
+        public void Init(BoardService boardService)
+        {
+            this.boardService = boardService;
         }
         public void SetPosition(Vector3 spawnPosition) 
         { 
@@ -58,14 +62,20 @@ namespace JigsawGame.Tile
             if (tileView.ValidateClickAction())
             {
                 IsSelected = false;
+                if(boardService.ValidateTilePosition(tileView.transform.position))
+                {
+                    Debug.Log("Valid position");
+                }
+                else
+                {
+                    tileView.SetPreviousPosition();
+                    Debug.Log("Invalid position");
+                }
                 Debug.Log(ID);
             }
         }
 
-        public void SetPositionOffset(Vector2 posToSet)
-        {
-            positionOffset = posToSet;
-        }
+        
     }
 
 }

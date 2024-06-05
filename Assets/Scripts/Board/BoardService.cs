@@ -16,6 +16,7 @@ namespace JigsawGame.Board
         private int tileHeight;
         private int tileWidth;
         private int selectedImageIndex;
+        private int minScale;
         public BoardService(BoardSO boardSO)
         {
             this.boardSO = boardSO;
@@ -44,13 +45,13 @@ namespace JigsawGame.Board
         private void ConfigureTiles()
         {
             Texture2D boarderTexture = SpriteHandler.LoadTexture(boardSO.ImagesPath[selectedImageIndex]);
-            
-            int minScale = (boardSO.RowCount < boardSO.ColumnCount) ? boardSO.RowCount : boardSO.ColumnCount;
+
+            minScale = (boardSO.RowCount < boardSO.ColumnCount) ? boardSO.RowCount : boardSO.ColumnCount;
             int totalTileCount = minScale * minScale;
             TileController tempTileController;
             Sprite tempSprite;
             Vector2 tempPosition;
-            
+
 
             for (int i = 0; i < totalTileCount; i++)
             {
@@ -58,7 +59,8 @@ namespace JigsawGame.Board
                 {
                     ID = i + 1
                 };
-               
+                tempTileController.Init(this);
+
                 tempPosition = new Vector2((i % minScale) * tileWidth, (i / minScale) * tileHeight);
                 tempTileController.SetPosition(tempPosition);
                 tempTileController.SetCorrectPosition(tempPosition);
@@ -74,12 +76,20 @@ namespace JigsawGame.Board
             }
         }
 
-        void SetCameraPosition()
+        private void SetCameraPosition()
         {
             Camera.main.transform.position = new Vector3(boardSO.WidthInPixel / 2, boardSO.HeightInPixel / 2, -10.0f);
 
             int smaller_value = Mathf.Min(boardSO.WidthInPixel, boardSO.HeightInPixel);
             Camera.main.orthographicSize = smaller_value * 0.9f;
+        }
+
+        public bool ValidateTilePosition(Vector2 posToValidate)
+        {
+            float xOffset = minScale *  tileWidth;
+            float yOffset = minScale * tileHeight;
+
+            return (posToValidate.x >= 0 && posToValidate.x <= xOffset) &&(posToValidate.y >= 0 && posToValidate.y <= yOffset);
         }
     }
 
