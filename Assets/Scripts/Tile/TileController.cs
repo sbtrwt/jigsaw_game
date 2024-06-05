@@ -8,7 +8,8 @@ namespace JigsawGame.Tile
     public class TileController
     {
         private TileView tileView;
-
+       
+        public int ID { get; set; }
         public TileController(TileView tileViewPrefab)
         {
             tileView = Object.Instantiate(tileViewPrefab);
@@ -16,7 +17,10 @@ namespace JigsawGame.Tile
         }
         public void SetPosition(Vector3 spawnPosition) => tileView.transform.position = spawnPosition;
 
-
+        public void SetSprite(Sprite spriteToSet)
+        {
+            tileView.SetSpriteRenderer(spriteToSet);
+        }
     }
 
 }

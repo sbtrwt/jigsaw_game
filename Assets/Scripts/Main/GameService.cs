@@ -12,6 +12,7 @@ namespace JigsawGame.Main
 
         [SerializeField] private BoardSO boardSO;
         [SerializeField] private UIService uIService;
+
         private void Start()
         {
             InitializeServices();

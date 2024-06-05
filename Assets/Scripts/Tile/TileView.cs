@@ -14,6 +14,8 @@ namespace JigsawGame.Tile
             this.controller = controller;
         }
 
-        public void SetRenderer(Sprite spriteToSet) => spriteRenderer.sprite = spriteToSet;
+        public void SetSpriteRenderer(Sprite spriteToSet) => spriteRenderer.sprite = spriteToSet;
+    
+    
     }
 }
