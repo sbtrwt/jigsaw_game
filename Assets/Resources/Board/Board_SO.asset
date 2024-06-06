@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TilePrefab: {fileID: 2402875092087751321, guid: d563965f059a7c247b5c656c7d32ed75, type: 3}
   RowCount: 4
-  ColumnCount: 6
+  ColumnCount: 4
   HeightInPixel: 400
-  WidthInPixel: 300
+  WidthInPixel: 400
   ImagesPath:
   - Images/image01
