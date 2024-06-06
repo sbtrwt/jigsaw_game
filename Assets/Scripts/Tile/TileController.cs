@@ -33,7 +33,6 @@ namespace JigsawGame.Tile
         public void SetPosition(Vector3 spawnPosition) 
         { 
             tileView.transform.position = spawnPosition;
-           
         }
 
         public void SetSprite(Sprite spriteToSet)
@@ -54,23 +53,28 @@ namespace JigsawGame.Tile
         {
             if (tileView.ValidateClickAction())
             {
+                //Debug.Log("Click down " + ID);
                 IsSelected = true;
-               
+                boardService.SelectedTile = this;
+                boardService.TileSorting.BringToTop(tileView.GetSpriteRenderer());
+
             }
         }
+        public SpriteRenderer GetSpriteRenderer() => tileView.GetSpriteRenderer();
 
-        public void OnTileClickUp(Vector3 mousePosition)
+        public void OnTileClickUp()
         {
 
-            if (tileView.ValidateClickAction())
+            if (this.Equals(boardService.SelectedTile))
             {
                 IsSelected = false;
-                Debug.Log("Swap Valid position begin");
-                if (boardService.ValidateTilePosition(mousePosition))
+                boardService.SelectedTile = null;
+               
+                if (boardService.ValidateTilePosition(tileView.transform.position))
                 {
-                    Debug.Log("Swap Valid position ");
+                   
 
-                    TileController dropTile = boardService.GetTileControllerByPosition(mousePosition);
+                    TileController dropTile = boardService.GetTileControllerByPosition(tileView.transform.position);
                     if (dropTile != null)
                     {
                         boardService.SwapTilePosition(this, dropTile);
@@ -83,11 +87,11 @@ namespace JigsawGame.Tile
                 }
                 else
                 {
-                    //tileView.SetPreviousPosition();
+                   
                     boardService.ResetTilePosition(this);
                     Debug.Log("Invalid position");
                 }
-                //Debug.Log(ID);
+               
             }
             else { boardService.ResetTilePosition(this); }
 

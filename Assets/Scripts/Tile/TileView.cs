@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace JigsawGame.Tile
 {
@@ -30,7 +31,7 @@ namespace JigsawGame.Tile
             if (Input.GetMouseButtonDown(0))
             {
                 controller?.OnTileClickDown();
-                //controller?.SetPositionOffset(transform.position - mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0.0f)));
+              
                 if (controller.IsSelected)
                 {
                     previousPosition = transform.position;
@@ -39,9 +40,9 @@ namespace JigsawGame.Tile
             }
             if (Input.GetMouseButtonUp(0))
             {
-                transform.position = new Vector3(transform.position.x, transform.position.y, 1);
-                Vector3 mousePosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f));
-                controller?.OnTileClickUp(mousePosition);
+                transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+                //Vector3 mousePosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f));
+                controller?.OnTileClickUp();
             }
 #endif
 #if UNITY_ANDROID
@@ -65,7 +66,7 @@ namespace JigsawGame.Tile
             if (controller.IsSelected)
             {
                 Vector3 curPosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f)) + positionOffset;
-                curPosition.z = 1;
+                //curPosition.z = 1;
                 transform.position = curPosition;
             }
 
@@ -76,12 +77,17 @@ namespace JigsawGame.Tile
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
            
-            if (hit.collider != null && boxCollider2D.Equals(hit.collider))
+            if (hit.collider != null && boxCollider2D.Equals(hit.collider) )
             {
-               
                 return true;
             }
             return false;
+        }
+        public Collider2D GetOverlappedCollider()
+        {
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+            return hit.collider;
         }
 
         public void SetColliderSize(Vector2 sizeToSet)
@@ -96,5 +102,6 @@ namespace JigsawGame.Tile
         {
             transform.position = previousPosition;
         }
+        public SpriteRenderer GetSpriteRenderer() => spriteRenderer;
     }
 }

@@ -18,6 +18,8 @@ namespace JigsawGame.Board
         private int tileWidth;
         private int selectedImageIndex;
         private int minScale;
+
+        public TileController SelectedTile { get; set; }
         public TileSorting TileSorting { get; set; } 
         public BoardService(BoardSO boardSO, Transform boardContainer)
         {
@@ -28,6 +30,7 @@ namespace JigsawGame.Board
             tileWidth = boardSO.WidthInPixel / boardSO.ColumnCount;
             selectedImageIndex = 0;
             minScale = (boardSO.RowCount < boardSO.ColumnCount) ? boardSO.RowCount : boardSO.ColumnCount;
+            TileSorting = new TileSorting();
         }
 
         public void Init(EventService eventService)
@@ -78,6 +81,7 @@ namespace JigsawGame.Board
                                                                     tileHeight);
 
                 tempTileController.SetSprite(tempSprite);
+                TileSorting.BringToTop(tempTileController.GetSpriteRenderer());
                 allTiles.Add(tempTileController);
             }
         }
@@ -95,8 +99,8 @@ namespace JigsawGame.Board
         {
             float xOffset = minScale * tileWidth;
             float yOffset = minScale * tileHeight;
-
-            return (posToValidate.x >= 0 && posToValidate.x <= xOffset) && (posToValidate.y >= 0 && posToValidate.y <= yOffset);
+            float margin = 30f;
+            return (posToValidate.x >= (0- margin) && posToValidate.x <= (xOffset + margin)) && (posToValidate.y >= (0 - margin) && posToValidate.y <= (yOffset + margin));
         }
 
         public void SwapTilePosition(TileController tileController1, TileController tileController2)
@@ -109,7 +113,7 @@ namespace JigsawGame.Board
         }
         private Vector3 GetPositionByIndex(int index)
         {
-            return new Vector3((index % minScale) * tileWidth, (index / minScale) * tileHeight, 3);
+            return new Vector3((index % minScale) * tileWidth, (index / minScale) * tileHeight, 0);
         }
 
         public TileController GetTileControllerByPosition(Vector2 positionToFind)
@@ -119,11 +123,13 @@ namespace JigsawGame.Board
             foreach (var tile in allTiles)
             {
                 tempPostion = GetPositionByIndex(tile.CurrentIndex);
+                Debug.Log(positionToFind);
+                Debug.Log(tempPostion);
                 //if((positionToFind - tempPostion).sqrMagnitude < tileWidth * tileWidth)
-                if ((positionToFind.x > (tempPostion.x - tileWidth / 1.3f)
-                    && positionToFind.x < (tempPostion.x + tileWidth / 1.3f))
-                    && (positionToFind.y >= (tempPostion.y - tileHeight / 1.3f)
-                    && positionToFind.y <= (tempPostion.y + tileHeight / 1.3f)))
+                if ((positionToFind.x > (tempPostion.x - tileWidth / 1.1f)
+                    && positionToFind.x < (tempPostion.x + tileWidth / 1.1f))
+                    && (positionToFind.y >= (tempPostion.y - tileHeight / 1.1f)
+                    && positionToFind.y <= (tempPostion.y + tileHeight / 1.1f)))
                 {
                     resultTile = tile;
                     break;

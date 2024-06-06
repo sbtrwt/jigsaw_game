@@ -54,7 +54,7 @@ namespace JigsawGame.UI
 
         private void OnClickRestartButton()
         {
-            eventService.OnGameStart.InvokeEvent(1);
+            eventService.OnTileSuffle.InvokeEvent(true);
             SetActiveGameoverPanel(false);
             SetActiveGameMenuPanel(true);
         }

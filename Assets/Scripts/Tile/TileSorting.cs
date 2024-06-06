@@ -46,7 +46,7 @@ namespace JigsawGame.Tile
         {
             renderer.sortingOrder = index;
             Vector3 p = renderer.transform.position;
-            p.z = -index / 10.0f;
+            p.z = -index / 5.0f;
             renderer.transform.position = p;
         }
     }
