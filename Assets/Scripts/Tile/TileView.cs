@@ -40,7 +40,8 @@ namespace JigsawGame.Tile
             if (Input.GetMouseButtonUp(0))
             {
                 transform.position = new Vector3(transform.position.x, transform.position.y, 1);
-                controller?.OnTileClickUp();
+                Vector3 mousePosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f));
+                controller?.OnTileClickUp(mousePosition);
             }
 #endif
 #if UNITY_ANDROID

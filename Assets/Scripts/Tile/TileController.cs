@@ -20,9 +20,10 @@ namespace JigsawGame.Tile
         public int ID { get; set; }
         public int CurrentIndex { get; set; }
         public bool IsSelected{get;set;}
-        public TileController(TileView tileViewPrefab)
+        public bool IsCorrectPosition { get { return correctPosition.x == tileView.transform.position.x && correctPosition.y == tileView.transform.position.y; } }
+        public TileController(TileView tileViewPrefab, Transform container)
         {
-            tileView = UnityEngine.Object.Instantiate(tileViewPrefab);
+            tileView = UnityEngine.Object.Instantiate(tileViewPrefab, container);
             tileView.SetController(this);
         }
         public void Init(BoardService boardService)
@@ -58,18 +59,18 @@ namespace JigsawGame.Tile
             }
         }
 
-        public void OnTileClickUp()
+        public void OnTileClickUp(Vector3 mousePosition)
         {
 
             if (tileView.ValidateClickAction())
             {
                 IsSelected = false;
                 Debug.Log("Swap Valid position begin");
-                if (boardService.ValidateTilePosition(tileView.transform.position))
+                if (boardService.ValidateTilePosition(mousePosition))
                 {
                     Debug.Log("Swap Valid position ");
 
-                    TileController dropTile = boardService.GetTileControllerByPosition(tileView.transform.position);
+                    TileController dropTile = boardService.GetTileControllerByPosition(mousePosition);
                     if (dropTile != null)
                     {
                         boardService.SwapTilePosition(this, dropTile);
@@ -89,7 +90,8 @@ namespace JigsawGame.Tile
                 //Debug.Log(ID);
             }
             else { boardService.ResetTilePosition(this); }
-            
+
+            boardService.ValidateGameOver();
         }
 
         

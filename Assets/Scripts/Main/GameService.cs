@@ -12,7 +12,7 @@ namespace JigsawGame.Main
 
         [SerializeField] private BoardSO boardSO;
         [SerializeField] private UIService uIService;
-
+        [SerializeField] private Transform boardContainer;
         private void Start()
         {
             InitializeServices();
@@ -22,7 +22,7 @@ namespace JigsawGame.Main
         private void InitializeServices()
         {
             eventService = new EventService();
-            boardSevice = new BoardService(boardSO);
+            boardSevice = new BoardService(boardSO, boardContainer);
         }
 
         private void InjectDependencies()
