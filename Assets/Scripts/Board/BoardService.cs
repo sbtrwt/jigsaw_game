@@ -57,35 +57,40 @@ namespace JigsawGame.Board
 
             int totalTileCount = minScale * minScale;
             TileController tempTileController;
-            Sprite tempSprite;
-            Vector2 tempPosition;
+           
 
 
             for (int i = 0; i < totalTileCount; i++)
             {
-                tempTileController = new TileController(boardSO.TilePrefab, boardContainer)
-                {
-                    ID = i + 1,
-                    CurrentIndex = i
-                };
-                tempTileController.Init(this);
-
-                tempPosition = GetPositionByIndex(i);
-                tempTileController.SetPosition(tempPosition);
-                tempTileController.SetCorrectPosition(tempPosition);
-                tempTileController.SetSize(new Vector2(tileWidth, tileHeight));
-                tempSprite = SpriteHandler.CreateSpriteFromTexture2D(boarderTexture,
-                                                                    (int)tempPosition.x,
-                                                                     (int)tempPosition.y,
-                                                                    tileWidth,
-                                                                    tileHeight);
-
-                tempTileController.SetSprite(tempSprite);
-                TileSorting.BringToTop(tempTileController.GetSpriteRenderer());
+                CreateTile(boarderTexture, out tempTileController,  i);
                 allTiles.Add(tempTileController);
             }
         }
 
+        private void CreateTile(Texture2D boarderTexture, out TileController tempTileController, int i)
+        {
+            Sprite tempSprite;
+            Vector2 tempPosition;
+            tempTileController = new TileController(boardSO.TilePrefab, boardContainer)
+            {
+                ID = i + 1,
+                CurrentIndex = i
+            };
+            tempTileController.Init(this);
+
+            tempPosition = GetPositionByIndex(i);
+            tempTileController.SetPosition(tempPosition);
+            tempTileController.SetCorrectPosition(tempPosition);
+            tempTileController.SetSize(new Vector2(tileWidth, tileHeight));
+            tempSprite = SpriteHandler.CreateSpriteFromTexture2D(boarderTexture,
+                                                                (int)tempPosition.x,
+                                                                 (int)tempPosition.y,
+                                                                tileWidth,
+                                                                tileHeight);
+
+            tempTileController.SetSprite(tempSprite);
+            TileSorting.BringToTop(tempTileController.GetSpriteRenderer());
+        }
 
         private void SetCameraPosition()
         {

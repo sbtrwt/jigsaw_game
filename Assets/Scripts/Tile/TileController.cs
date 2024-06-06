@@ -69,36 +69,35 @@ namespace JigsawGame.Tile
             {
                 IsSelected = false;
                 boardService.SelectedTile = null;
-               
-                if (boardService.ValidateTilePosition(tileView.transform.position))
-                {
-                   
 
-                    TileController dropTile = boardService.GetTileControllerByPosition(tileView.transform.position);
-                    if (dropTile != null)
-                    {
-                        boardService.SwapTilePosition(this, dropTile);
-                        Debug.Log("Swap Valid position " + dropTile.CurrentIndex + " " + CurrentIndex);
-                    }
-                    else
-                    {
-                        tileView.SetPreviousPosition();
-                    }
-                }
-                else
-                {
-                   
-                    boardService.ResetTilePosition(this);
-                    Debug.Log("Invalid position");
-                }
-               
+                SwapOverlappedTiles();
+
             }
             else { boardService.ResetTilePosition(this); }
 
             boardService.ValidateGameOver();
         }
 
-        
+        private void SwapOverlappedTiles()
+        {
+            if (boardService.ValidateTilePosition(tileView.transform.position))
+            {
+                TileController dropTile = boardService.GetTileControllerByPosition(tileView.transform.position);
+                if (dropTile != null)
+                {
+                    boardService.SwapTilePosition(this, dropTile);
+                }
+                else
+                {
+                    tileView.SetPreviousPosition();
+                }
+            }
+            else
+            {
+                boardService.ResetTilePosition(this);
+            }
+        }
+
     }
 
 }
