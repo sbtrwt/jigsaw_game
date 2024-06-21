@@ -14,7 +14,7 @@ My main idea to test texture and sprites dynamicaly.
 ### HOW TO PLAY
 - Player can click suffle button to start
 - Player can click and drag tile to desired location
-- If all tiles in right place then you win.
+- If all tiles are in right place then you win.
 
 
 ### Lobby 
